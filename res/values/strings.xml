@@ -2,9 +2,10 @@
 
     <string name="app_name">Carona Comunitária</string>
     <string name="login">Login</string>
-    <string name="login_field">Número USP</string>
+    <string name="login_field">E-mail USP</string>
     <string name="password_field">Senha</string>
     <string name="dar_carona">Dar Carona</string>
     <string name="receber_carona">Receber Carona</string>
+    <string name="cadastro">Cadastrar-se</string>
 
 </resources>

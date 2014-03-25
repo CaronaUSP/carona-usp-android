@@ -28,18 +28,24 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/dar_carona"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/dar_carona" />
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/receber_carona"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/receber_carona" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/cadastro"
+        android:text="@string/cadastro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
