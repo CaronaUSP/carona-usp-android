@@ -32,14 +32,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/dar_carona" />
+            android:text="@string/dar_carona" 
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/receber_carona"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/receber_carona" />
+            android:text="@string/receber_carona"
+            android:onClick="onClick"/> />
     </LinearLayout>
 
     <Button
