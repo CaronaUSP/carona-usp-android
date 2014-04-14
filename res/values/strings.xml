@@ -1,11 +1,19 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="app_name">Carona Comunitária</string>
     <string name="login">Login</string>
     <string name="login_field">E-mail USP</string>
     <string name="password_field">Senha</string>
-    <string name="dar_carona">Dar Carona</string>
-    <string name="receber_carona">Receber Carona</string>
+    <string name="dar_carona">Dar carona</string>
+    <string name="receber_carona">Receber carona</string>
     <string name="cadastro">Cadastrar-se</string>
+    <string android:layout_height="wrap_content" android:id="@+id/string1" android:layout_width="wrap_content" name="usp_br">@usp.br</string>
+    <string name="cadastro_info">O seu e-mail deve terminar em "usp.br" para você poder utilizar a Carona Comunitária.</string>
+	<string name="numero_usp">Número USP</string>
+    <string name="repetir_senha">Repetir senha</string>
+    <string name="voltar">Voltar</string>
+    <string name="enviar">Enviar</string>
+    <string name="esqueci">Esqueci a senha</string>
+    <string name="esqueci_info">Após inserir o seu número USP e clicar em "Enviar", você receberá um e-mail para alterar a sua senha.</string>
 
 </resources>
