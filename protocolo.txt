@@ -1,0 +1,20 @@
+O protocolo que será utilizado é JSON (Java Script Object Notation) (http://www.json.org/)
+para comunicação. O padrão foi criado para ser leve e simples e é facilmente implementado
+em java por bibliotecas externas.
+
+Algumas mensagens para comunicação entre o cliente e o servidor:
+
+login: envia para o cliente a mensagem para cifrar o hash do login.
+Exemplo: {"login" : "mensagem para hash"}
+
+hash: envia para o servidor o hash.
+Exemplo: {"hash" : "0123456789ABCDEF0123456789ABCDEF"}
+
+msg: envia para o cliente uma mensagem para ser mostrada ao usuário.
+Exemplo: {"msg" : "Ocorreu um erro!"}
+
+fim: indica ao cliente que a conexão será fechada. Não possui valor definido.
+Exemplo: {"fim" : null}
+
+A lista ainda será expandida. Cada objeto pode conter mais que uma mensagem, como:
+{"msg" : "Erro de comunicação", "fim" : null}
