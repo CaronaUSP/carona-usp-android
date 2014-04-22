@@ -29,6 +29,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Mapa"></activity>
+        <activity android:name=".Cadastro"></activity>
+        <activity android:name=".Esqueci"></activity>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

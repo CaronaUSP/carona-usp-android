@@ -12,7 +12,14 @@
         android:text="@string/cadastro"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="@android:dimen/app_icon_size" />
-    <EditText android:ems="10" android:id="@+id/editText1" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/login_field" android:inputType="textEmailAddress"/>
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/login_field"
+        android:inputType="textEmailAddress" />
 
     <TextView
         android:id="@+id/textView2"
@@ -22,7 +29,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/numeroUSP"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -33,7 +40,7 @@
     </EditText>
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/Senha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -53,17 +60,19 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/voltar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
+            android:onClick="onClick"
             android:text="@string/voltar" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/cadastrar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
+            android:onClick="onClick"
             android:text="@string/enviar" />
     </LinearLayout>
 

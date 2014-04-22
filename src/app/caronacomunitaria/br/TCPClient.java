@@ -10,51 +10,54 @@
 
 package app.caronacomunitaria.br;
 
+import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.EventListener;
 
 public class TCPClient implements Runnable {
-	
+
 	private int porta;
-	private String ip_servidor = "";
+	private byte[] ip_servidor;
 	private int porta_local;
 	private Socket socket;
-	private OutputStream out;
-	private InputStream in;
+	private OutputStreamWriter outw;
+	private BufferedReader in;
 	private OnMessageReceivedListener mMessageListener = null;
 	private boolean run;
-	private int mensagem_servidor;
+	private String mensagem_servidor;
 
-	public TCPClient(int porta, String ip_servidor, int porta_local) {
+	public TCPClient(int porta, byte[] ip_servidor, int porta_local) {
 		this.porta = porta;
 		this.ip_servidor = ip_servidor;
 		this.porta_local = porta_local;
 	}
 
 	public void conectar() throws UnknownHostException, IOException {
-		socket = new Socket(InetAddress.getByName(ip_servidor), porta, null,
+		socket = new Socket(InetAddress.getByAddress(ip_servidor), porta, null,
 				porta_local);
-		out = socket.getOutputStream();
+		outw = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
+		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	}
 
-	public void enviarMensagem(byte[] mensagem) throws IOException {
-		if (out != null) {
-			out.write(mensagem);
-			out.flush();
-			out.close();
+	public void enviarMensagem(String mensagem) throws IOException {
+		if (outw != null) {
+			outw.write(mensagem);
+			outw.flush();
+			outw.close();
 		}
 	}
-	
+
 	public void enviarMensagem(int mensagem) throws IOException {
-		if (out != null) {
-			out.write(mensagem);
-			out.flush();
-			out.close();
+		if (outw != null) {
+			outw.write(mensagem);
+			outw.flush();
+			outw.close();
 		}
 	}
 
@@ -63,19 +66,12 @@ public class TCPClient implements Runnable {
 		run = false;
 	}
 
-	static byte[] intToByteArray(int i) {
-		return new byte[] { (byte) i, (byte) (i >> 8), (byte) (i >> 16),
-				(byte) (i >> 24) };
-	}
-
-	
-
 	public void setOnMessageReceivedListener(OnMessageReceivedListener listener) {
 		mMessageListener = listener;
 	}
 
 	public interface OnMessageReceivedListener extends EventListener {
-		public void messageReceived(byte... message);
+		public void messageReceived(String message);
 	}
 
 	@Override
@@ -83,16 +79,16 @@ public class TCPClient implements Runnable {
 		run = true;
 		while (run) {
 			try {
-				mensagem_servidor = in.read();
+				mensagem_servidor = in.readLine();
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if (mensagem_servidor != -1 && mMessageListener != null)
-				mMessageListener
-						.messageReceived(intToByteArray(mensagem_servidor));
+			if (mensagem_servidor != "" && mMessageListener != null)
+				mMessageListener.messageReceived(mensagem_servidor);
 			else
 				break;
-			mensagem_servidor = -1;
+			mensagem_servidor = "";
 		}
 	}
 }
