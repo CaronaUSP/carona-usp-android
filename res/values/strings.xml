@@ -15,5 +15,6 @@
     <string name="enviar">Enviar</string>
     <string name="esqueci">Esqueci a senha</string>
     <string name="esqueci_info">Após inserir o seu número USP e clicar em "Enviar", você receberá um e-mail para alterar a sua senha.</string>
+    <string android:id="@+id/string1" android:layout_width="wrap_content" android:layout_height="wrap_content" name="copyright">© 2014 Carona Comunitária. O logotipo da USP é propriedade de USP Imagens. Os demais direitos estão atribuídos à licença CC BY-NC-SA 4.0.</string>
 
 </resources>

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="top|center"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="#EBEDF0" >
 
     <TextView
         android:id="@+id/textView1"
@@ -11,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="@string/cadastro"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="@android:dimen/app_icon_size" />
+        android:textSize="48sp" />
 
     <EditText
         android:id="@+id/editText1"
