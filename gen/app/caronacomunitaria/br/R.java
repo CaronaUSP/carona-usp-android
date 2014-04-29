@@ -209,26 +209,44 @@ containing a value of this type.
         public static final int ic_plusone_small_off_client=0x7f02001a;
         public static final int ic_plusone_standard_off_client=0x7f02001b;
         public static final int ic_plusone_tall_off_client=0x7f02001c;
+        public static final int logo=0x7f02001d;
     }
     public static final class id {
-        public static final int cadastro=0x7f050009;
-        public static final int dar_carona=0x7f050007;
+        public static final int Senha=0x7f050009;
+        public static final int button2=0x7f05000f;
+        public static final int cadastrar=0x7f05000c;
+        public static final int cadastro=0x7f050017;
+        public static final int copyright=0x7f050018;
+        public static final int dar_carona=0x7f050015;
+        public static final int editText1=0x7f050006;
+        public static final int editText3=0x7f05000a;
+        public static final int editText4=0x7f05000d;
+        public static final int esqueci=0x7f050014;
         public static final int hybrid=0x7f050004;
-        public static final int login=0x7f050005;
-        public static final int map=0x7f05000a;
+        public static final int login=0x7f050012;
+        public static final int logo=0x7f050010;
+        public static final int map=0x7f050019;
+        public static final int name=0x7f050011;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
-        public static final int password=0x7f050006;
-        public static final int receber_carona=0x7f050008;
+        public static final int numeroUSP=0x7f050008;
+        public static final int password=0x7f050013;
+        public static final int receber_carona=0x7f050016;
         public static final int satellite=0x7f050002;
         public static final int terrain=0x7f050003;
+        public static final int textView1=0x7f050005;
+        public static final int textView2=0x7f050007;
+        public static final int voltar=0x7f05000b;
+        public static final int voltar2=0x7f05000e;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f070000;
     }
     public static final class layout {
-        public static final int main=0x7f030000;
-        public static final int mapa=0x7f030001;
+        public static final int cadastro=0x7f030000;
+        public static final int esqueci=0x7f030001;
+        public static final int main=0x7f030002;
+        public static final int mapa=0x7f030003;
     }
     public static final class string {
         public static final int app_name=0x7f06001a;
@@ -256,6 +274,7 @@ containing a value of this type.
          */
         public static final int auth_client_using_bad_version_title=0x7f060014;
         public static final int cadastro=0x7f060020;
+        public static final int cadastro_info=0x7f060022;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
         can enable it [CHAR LIMIT=40] 
@@ -327,11 +346,19 @@ containing a value of this type.
         /**  Long form sign-in button text [CHAR LIMIT=30] 
          */
         public static final int common_signin_button_text_long=0x7f060013;
+        public static final int copyright=0x7f060029;
         public static final int dar_carona=0x7f06001e;
+        public static final int enviar=0x7f060026;
+        public static final int esqueci=0x7f060027;
+        public static final int esqueci_info=0x7f060028;
         public static final int login=0x7f06001b;
         public static final int login_field=0x7f06001c;
+        public static final int numero_usp=0x7f060023;
         public static final int password_field=0x7f06001d;
         public static final int receber_carona=0x7f06001f;
+        public static final int repetir_senha=0x7f060024;
+        public static final int usp_br=0x7f060021;
+        public static final int voltar=0x7f060025;
     }
     public static final class style {
         /** 
