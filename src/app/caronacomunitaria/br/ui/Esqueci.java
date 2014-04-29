@@ -1,4 +1,4 @@
-package app.caronacomunitaria.br;
+package app.caronacomunitaria.br.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -22,6 +22,5 @@ public class Esqueci extends Activity {
 			break;
 
 		}
-
 	}
 }
