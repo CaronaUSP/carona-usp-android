@@ -4,17 +4,52 @@ em java por bibliotecas externas.
 
 Algumas mensagens para comunicação entre o cliente e o servidor:
 
-login: envia para o cliente a mensagem para cifrar o hash do login.
+
+Servidor -> Cliente:
+login: envia a mensagem para cifrar o hash do login.
 Exemplo: {"login" : "mensagem para hash"}
 
-hash: envia para o servidor o hash.
-Exemplo: {"hash" : "0123456789ABCDEF0123456789ABCDEF"}
-
-msg: envia para o cliente uma mensagem para ser mostrada ao usuário.
+msg: envia uma mensagem para ser mostrada ao usuário.
 Exemplo: {"msg" : "Ocorreu um erro!"}
 
-fim: indica ao cliente que a conexão será fechada. Não possui valor definido.
+
+
+Cliente -> Servidor:
+hash: envia para o servidor o hash.
+Exemplo: {"hash" : "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"}
+
+cadastro: cadastro de novo cliente, envia array com usuário USP (retirado do email USP) e hash da senha.
+Exemplo: {"cadastro" : ["usuario", "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"]}
+Um email será enviado para "usuário@usp.br" no futuro com um número de confirmação para ser digitado no aplicativo.
+
+
+
+Ambos:
+fim: indica que a conexão será fechada. Não possui valor definido.
 Exemplo: {"fim" : null}
+
+
+
+Se o usuário dará carona:
+Cliente -> Servidor:
+pontos: array de pontos de ônibus pelos quais o carro passará, enviada após login.
+Exemplo: {"pontos" : [1, 5, 9, 2]}
+Ainda temos que decidir a numeração dos pontos (tem que ser igual no servidor e cliente), acho que o mais intuitivo seria seguir o trajeto de um dos circulares.
+
+cheguei: indica que o carro chegou em um ponto (envia índice da array "pontos", definida acima).
+Exemplo: {"cheguei" : 2}
+Usando a array "pontos" como exemplo, {"cheguei" : 2} indica que chegamos no ponto 9 (índice dois de [1, 5, 9, 2]).
+
+
+
+Se o usuário receberá carona:
+inicio, fim: ponto de início e fim do trajeto, enviados após login.
+Exemplo: {inicio : 1, fim : 0}
+
 
 A lista ainda será expandida. Cada objeto pode conter mais que uma mensagem, como:
 {"msg" : "Erro de comunicação", "fim" : null}
+
+Ideias futuras (serão implementadas se sobrar tempo):
+-Incluir campo para identificação do carro (placa, modelo e/ou cor) para quem dará carona e enviar para quem receberá para facilitar a identificação.
+-Usar GPS para localizar posição de quem dá carona e cancelar a carona caso quem deseja receber deixe o ponto de ônibus.
