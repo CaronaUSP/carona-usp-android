@@ -20,6 +20,8 @@ public class Esqueci extends Activity {
 		case R.id.voltar2:
 			finish();
 			break;
+			
+			//TODO
 
 		}
 	}

@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 
 public class Mapa extends Activity {
 	GoogleMap map;
@@ -50,7 +51,7 @@ public class Mapa extends Activity {
 		}
 	};
 
-	private OnMapClickListener listener2 = new OnMapClickListener() {
+	private OnMapClickListener mapListener = new OnMapClickListener() {
 
 		@Override
 		public void onMapClick(LatLng arg0) {
@@ -100,7 +101,22 @@ public class Mapa extends Activity {
 				.title(titulo).snippet(descricao));
 		m.setIcon(BitmapDescriptorFactory.defaultMarker(color));
 		g.setOnMarkerClickListener(markerClickListener);
-		g.setOnMapClickListener(listener2);
+		g.setOnMapClickListener(mapListener);
 		return m;
+	}
+	
+	public void onClick(View v)
+	{
+		switch (v.getId()) {
+		case R.id.confirmar:
+			//TODO
+			break;
+
+		default:
+			break;
+		}
+		
+		
+		
 	}
 }

@@ -4,31 +4,36 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class TCPListener implements Runnable {
+import android.util.Log;
+
+public class TCPListener {
 
 	private BufferedReader in;
-	private boolean run = true;
+	private boolean run = false;
 	private String mensagem_servidor;
 	private OnMessageReceivedListener mMessageListener;
 
 	public TCPListener(TCPClient tcp) throws IOException {
-		this.in = new BufferedReader(new InputStreamReader(tcp.getInputStream()));
+		this.in = new BufferedReader(
+				new InputStreamReader(tcp.getInputStream()));
 	}
 
-	@Override
 	public void run() {
-		while (run) {
-			try {
+		run = true;
+
+		try {
+			while (run) {
 				mensagem_servidor = in.readLine();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if (mensagem_servidor != null && mMessageListener != null) {
+					mMessageListener.messageReceived(mensagem_servidor);
+				}
+				mensagem_servidor = null;
+
 			}
-			if (mensagem_servidor != "" && mMessageListener != null)
-				mMessageListener.messageReceived(mensagem_servidor);
-			else
-				break;
-			mensagem_servidor = "";
+
+		} catch (Exception e) {
+			//TODO
+			Log.e("ERRO:", e.getMessage());
 		}
 	}
 

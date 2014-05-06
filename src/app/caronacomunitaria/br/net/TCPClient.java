@@ -3,6 +3,7 @@ package app.caronacomunitaria.br.net;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -22,10 +23,19 @@ import java.net.UnknownHostException;
  **/
 
 public class TCPClient {
-
+	/**
+	 * Porta do servidor que será usada para a conexão 
+	 * */	 
 	private int porta;
+	/**
+	 * Endereço ip do servidor
+	 * */
 	private String host;
+	/**
+	 * Socket usado para a transmissão de dados
+	 * */
 	private Socket socket;
+	
 	private OutputStreamWriter outw;
 
 	/**
@@ -51,12 +61,13 @@ public class TCPClient {
 	 */
 
 	public void conectar() throws UnknownHostException, IOException {
-		socket = new Socket(host, porta);
+		InetAddress serverAddr = InetAddress.getByName(this.host);
+		socket = new Socket(serverAddr, porta);
 		outw = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
 	}
 
 	/**
-	 * Envia o argumento <i>mensagem</i> para o servidor
+	 * Envia a String <i>mensagem</i> para o servidor
 	 * 
 	 * @throws IOException
 	 */
@@ -68,12 +79,19 @@ public class TCPClient {
 			outw.close();
 		}
 	}
+	
+	/**
+	 * Envia o inteiro <i>mensagem</i> para o servidor
+	 * 
+	 * @throws IOException
+	 */
 
 	public void enviarMensagem(int mensagem) throws IOException {
 		if (outw != null) {
 			outw.write(mensagem);
 			outw.flush();
 			outw.close();
+			
 		}
 	}
 
@@ -86,6 +104,12 @@ public class TCPClient {
 	public void desconectar() throws IOException {
 		socket.close();
 	}
+	
+	/**
+	 * Retorna um input stream para ler dados do socket.
+	 * 
+	 * @throws IOException
+	 */
 
 	public InputStream getInputStream() throws IOException {
 		return socket.getInputStream();
