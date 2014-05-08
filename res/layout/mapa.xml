@@ -20,12 +20,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/confirmar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:onClick="onClick"
-        android:text="@string/confirmar" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@id/voltar"
+            android:layout_width="141dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.67"
+            android:onClick="onClick"
+            android:text="@string/voltar" />
+
+        <Button
+            android:id="@+id/confirmar"
+            android:layout_width="168dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:text="@string/confirmar" />
+
+    </LinearLayout>
 
 </LinearLayout>
