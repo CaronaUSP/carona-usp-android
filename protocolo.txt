@@ -15,8 +15,8 @@ Exemplo: {"msg" : "Ocorreu um erro!"}
 
 
 Cliente -> Servidor:
-hash: envia para o servidor o hash.
-Exemplo: {"hash" : "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"}
+usuario/hash: envia para o servidor o usuário e hash.
+Exemplo: {"usuario" : "exemplo", "hash" : "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"}
 
 cadastro: cadastro de novo cliente, envia array com usuário USP (retirado do email USP) e hash da senha.
 Exemplo: {"cadastro" : ["usuario", "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"]}
