@@ -31,6 +31,7 @@
     <string name="dados_enviados">Dados enviados.</string>
     <string name="boa_carona">Boa carona!</string>
     <string name="dados_invalidos">Dado(s) inválido(s). Tente novamente.</string>
+    <string name="nova_senha">Esqueci minha senha</string>
     
 
 </resources>

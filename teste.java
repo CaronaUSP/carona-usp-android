@@ -1,5 +1,5 @@
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
@@ -17,11 +17,11 @@ public class teste {
 
 			String json = "{\"usuario\" : \"exemplo\", \"hash\" : \"0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF\"}";
 
-			/* Essa parte não está funcionando */
-			OutputStream os = socket.getOutputStream();
-			os.write(json.getBytes());
-			os.flush();
-
+			
+			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+			out.write(json);
+			out.flush();
+			
 			InputStream is = socket.getInputStream();
 			int message = 0;
 			while ((message = is.read()) != -1) {
