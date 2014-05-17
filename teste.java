@@ -15,7 +15,7 @@ public class teste {
 			InetAddress address = InetAddress.getByName(HOST);
 			socket = new Socket(address, PORT);
 
-			String json = "{\"usuario\" : \"exemplo\", \"hash\" : \"0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF\"}";
+			String json = "{\"usuario\" : \"exemplo\", \"hash\" : \"0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF\"}\0";
 
 			
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
