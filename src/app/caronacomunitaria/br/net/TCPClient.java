@@ -2,7 +2,8 @@ package app.caronacomunitaria.br.net;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
+
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -24,8 +25,8 @@ import java.net.UnknownHostException;
 
 public class TCPClient {
 	/**
-	 * Porta do servidor que será usada para a conexão 
-	 * */	 
+	 * Porta do servidor que será usada para a conexão
+	 * */
 	private int porta;
 	/**
 	 * Endereço ip do servidor
@@ -35,8 +36,8 @@ public class TCPClient {
 	 * Socket usado para a transmissão de dados
 	 * */
 	private Socket socket;
-	
-	private OutputStreamWriter outw;
+
+	private PrintWriter out;
 
 	/**
 	 * Construtor com porta, ip
@@ -63,7 +64,7 @@ public class TCPClient {
 	public void conectar() throws UnknownHostException, IOException {
 		InetAddress serverAddr = InetAddress.getByName(this.host);
 		socket = new Socket(serverAddr, porta);
-		outw = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
+		out = new PrintWriter(socket.getOutputStream(), true);
 	}
 
 	/**
@@ -73,25 +74,11 @@ public class TCPClient {
 	 */
 
 	public void enviarMensagem(String mensagem) throws IOException {
-		if (outw != null) {
-			outw.write(mensagem);
-			outw.flush();
-			outw.close();
-		}
-	}
-	
-	/**
-	 * Envia o inteiro <i>mensagem</i> para o servidor
-	 * 
-	 * @throws IOException
-	 */
 
-	public void enviarMensagem(int mensagem) throws IOException {
-		if (outw != null) {
-			outw.write(mensagem);
-			outw.flush();
-			outw.close();
-			
+		if (out != null) {
+			out.write(mensagem);
+			out.write("\0");
+			out.flush();
 		}
 	}
 
@@ -104,7 +91,7 @@ public class TCPClient {
 	public void desconectar() throws IOException {
 		socket.close();
 	}
-	
+
 	/**
 	 * Retorna um input stream para ler dados do socket.
 	 * 
