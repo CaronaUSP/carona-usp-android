@@ -18,14 +18,19 @@ Cliente -> Servidor:
 usuario/hash: envia para o servidor o usuário e hash.
 Exemplo: {"usuario" : "exemplo", "hash" : "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"}
 
-cadastro: cadastro de novo cliente, envia array com usuário USP (retirado do email USP) e hash da senha.
-Exemplo: {"cadastro" : ["usuario", "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"]}
-Um email será enviado para "usuário@usp.br" no futuro com um número de confirmação para ser digitado no aplicativo.
+cadastro: valor nulo, indica que deseja-se fazer cadastro e não login
+Exemplo: {"cadastro" : null, "usuario" : "exemplo", "hash" : "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"}
+Um email será enviado para "exemplo@usp.br" com um número de confirmação para ser digitado no aplicativo.
 
+ok: booleano indicando status da última operação requisitada pelo cliente. true indica sucesso, false falha. Algumas falhas
+fecham a conexão com mensagem de erro ao invés de retornar status de falha, por enquanto, apenas a checagem do código no cadastro
+retorna status inválido (se o código estiver errado, significando que o cliente deve pedir para o usuário redigitar e enviar novamente
+o código). Outras partes devem suportar status de falha, vou mudar aqui quando o servidor for modificado.
 
 
 Ambos:
 fim: indica que a conexão será fechada. Não possui valor definido.
+Ainda precisa ser implementado no servidor (na verdade, irá fechar a conexão, mas com erro por não receber a duplaque ele esperaria)
 Exemplo: {"fim" : null}
 
 
@@ -39,6 +44,7 @@ Ainda temos que decidir a numeração dos pontos (tem que ser igual no servidor 
 cheguei: indica que o carro chegou em um ponto (envia índice da array "pontos", definida acima).
 Exemplo: {"cheguei" : 2}
 Usando a array "pontos" como exemplo, {"cheguei" : 2} indica que chegamos no ponto 9 (índice dois de [1, 5, 9, 2]).
+Será usado para atualizar a posição de quem dá carona no servidor. Ainda será implementado em ambos
 
 
 
