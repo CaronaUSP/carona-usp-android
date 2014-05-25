@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="top|center"
     android:orientation="vertical"
-    android:background="#EBEDF0" >
+    android:background="@drawable/fundo" >
 
     <TextView
         android:id="@+id/textView1"
@@ -66,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
             android:onClick="onClick"
+            android:background="@drawable/botao"
             android:text="@string/voltar" />
 
         <Button
@@ -74,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
             android:onClick="onClick"
+            android:background="@drawable/botao"
             android:text="@string/enviar" />
     </LinearLayout>
 

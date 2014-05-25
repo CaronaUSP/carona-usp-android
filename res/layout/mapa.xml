@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EBEDF0"
+    android:background="@drawable/fundo"
     android:gravity="right"
     android:orientation="vertical" >
 
@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.67"
             android:onClick="onClick"
+            android:background="@drawable/botao"
             android:text="@string/voltar" />
 
         <Button
@@ -38,6 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onClick"
+            android:background="@drawable/botao"
             android:text="@string/confirmar" />
 
     </LinearLayout>
