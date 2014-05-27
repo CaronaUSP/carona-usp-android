@@ -1,9 +1,12 @@
 package app.caronacomunitaria.br.net;
 
+
 public final class Consts {
 	public final static String HOST = "200.144.254.99";
 	public final static short PORTA = 3280;
-	public final static String ALGORITMO = "SHA-1";
+	public final static String ALGORITMO = "SHA-256";
+	public final static String MENSAGEM_HASH = app.caronacomunitaria.br.crypto.Hash.gerarHash("Hashes - Carona Comunitária USP (CC BY-NC-SA 4.0)",ALGORITMO);
+
 	
 	public final static String login = "login";
 	public final static String msg = "msg";

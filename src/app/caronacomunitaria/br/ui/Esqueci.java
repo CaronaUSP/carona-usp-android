@@ -22,6 +22,7 @@ public class Esqueci extends Activity {
 			break;
 			
 			//TODO
+			//enviar solicitação
 
 		}
 	}

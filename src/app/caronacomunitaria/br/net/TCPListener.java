@@ -17,14 +17,15 @@ public class TCPListener {
 
 	public void run() {
 		run = true;
-
+		int m;
 		try {
 			while (run) {
-				int m = 0;
+				m = 0;
 				while ((m = is.read()) != 0) {
 					mensagem_servidor.append((char) m);
 				}
 				mMessageListener.messageReceived(mensagem_servidor.toString());
+				mensagem_servidor = new StringBuilder();
 			}
 
 		} catch (Exception e) {
@@ -41,5 +42,4 @@ public class TCPListener {
 			OnMessageReceivedListener onMessageReceivedListener) {
 		this.mMessageListener = onMessageReceivedListener;
 	}
-
 }

@@ -1,7 +1,5 @@
 package app.caronacomunitaria.br.ui;
 
-import java.io.IOException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,9 +19,6 @@ import app.caronacomunitaria.br.net.TCPListener;
 
 public class Main extends Activity {
 
-	private TCPClient tcp_client;
-	private TCPListener tcp_listener;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,12 +28,8 @@ public class Main extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		try {
-			tcp_client.desconectar();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// TODO
+		// fechar conexão caso ela esteja aberta
 
 	}
 
@@ -51,8 +42,7 @@ public class Main extends Activity {
 		JSONObject json_mensagem = new JSONObject();
 		try {
 			json_mensagem.put("usuario", edLogin.getText().toString());
-			json_mensagem.put("hash", Hash.gerarHash(edSenha.getText()
-					.toString().getBytes(), "SHA-256"));
+			json_mensagem.put("senha", edSenha.getText().toString());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -62,7 +52,7 @@ public class Main extends Activity {
 
 		case R.id.dar_carona:
 
-			new Autenticar().execute(json_mensagem.toString());
+			new Autenticar().execute(json_mensagem);
 
 			// TODO Validar os os EditText login e senha
 
@@ -73,7 +63,7 @@ public class Main extends Activity {
 
 		case R.id.receber_carona:
 
-			new Autenticar().execute(json_mensagem.toString());
+			new Autenticar().execute(json_mensagem);
 			it = new Intent(this, Mapa.class);
 			startActivity(it);
 
@@ -93,46 +83,70 @@ public class Main extends Activity {
 
 	}
 
-	public class Autenticar extends AsyncTask<String, String, String> {
-		private String mensagem_servidor;
+	public class Autenticar extends AsyncTask<JSONObject, String, String> {
+
+		private JSONObject jsonMensagem;
+		private TCPClient tcpClient;
+		private TCPListener tcpListener;
 
 		@Override
-		protected String doInBackground(String... mensagem) {
-			this.mensagem_servidor = mensagem[0];
+		protected String doInBackground(JSONObject... mensagem) {
+			this.jsonMensagem = mensagem[0];
 
-			tcp_client = new TCPClient(Consts.PORTA, Consts.HOST);
+			tcpClient = new TCPClient(Consts.PORTA, Consts.HOST);
 			try {
-				tcp_client.conectar();
-				tcp_listener = new TCPListener(tcp_client);
+				tcpClient.conectar();
+				tcpListener = new TCPListener(tcpClient);
 
 			} catch (Exception e) {
 				Log.e("ERRO DE CONEXÃO", "Verifique sua conexão com a Internet");
 				return null;
 			}
 
-			tcp_listener
+			tcpListener
 					.setOnMessageReceivedListener(new OnMessageReceivedListener() {
 						@Override
 						public void messageReceived(String s) {
 							publishProgress(s);
+
 						}
 					});
 
-			tcp_listener.run();
+			tcpListener.run();
 
 			return null;
 		}
 
 		@Override
 		protected void onProgressUpdate(String... mensagem) {
-			// TODO
+			
 			super.onProgressUpdate(mensagem);
 			Log.e("Mensagem recebida", mensagem[0]);
+
 			try {
-				tcp_client.enviarMensagem(mensagem_servidor);
-			} catch (IOException e) {
+				JSONObject jsonRecebido = new JSONObject(mensagem[0]);
+
+				if (jsonRecebido.has("login")) {
+					String senha = jsonMensagem.getString("senha");
+					String mensagemRecebida = jsonRecebido.getString("login");
+
+					jsonMensagem.put("hash", Hash.gerarHash(mensagemRecebida
+							+ Consts.MENSAGEM_HASH + senha, Consts.ALGORITMO));
+					jsonMensagem.remove("senha");
+
+					tcpClient.enviarMensagem(jsonMensagem.toString());
+
+				} else {
+					if (jsonRecebido.has("fim")) {
+						tcpListener.stop();
+					}
+				}
+
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.e("Mensagem recebida", mensagem[0]);
+
+				tcpListener.stop();
 			}
 
 		}

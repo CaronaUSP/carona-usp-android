@@ -1,19 +1,28 @@
 package app.caronacomunitaria.br.crypto;
 
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class Hash {
-	public static String gerarHash(byte[] s, String algoritmo) {
+	public static String gerarHash(String s, String algoritmo) {
 
 		MessageDigest md;
 
 		try {
 			md = MessageDigest.getInstance(algoritmo);
-			md.update(s);
-		} catch (NoSuchAlgorithmException e) {
+			byte[] hash = md.digest(s.getBytes("UTF-8"));
+			StringBuilder hexString = new StringBuilder(2);
+			for (int i = 0; i < hash.length; i++) {
+				String hex = Integer.toHexString(0xff & hash[i]);
+				if(hex.length() == 1) hexString.append('0');
+				hexString.append(hex);
+			}
+			
+			return hexString.toString();
+			
+			
+		} catch (Exception e) {
 			return null;
 		}
-		return new String(md.digest());
+		
 	}
 }
