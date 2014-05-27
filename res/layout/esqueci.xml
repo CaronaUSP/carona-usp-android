@@ -10,7 +10,7 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/esqueci"
+        android:text="@string/esqueci_a_senha"
         android:textSize="40sp" />
 
     <TextView
@@ -20,13 +20,27 @@
         android:text="@string/esqueci_info"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <EditText
-        android:id="@+id/editText4"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/numero_usp"
-        android:inputType="number" />
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:id="@+id/EditText01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10.54"
+            android:ems="10"
+            android:hint="@string/login_field"
+            android:inputType="textEmailAddress" />
+
+        <TextView
+            android:id="@+id/TextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/usp_br"
+            android:textSize="19sp" />
+    </LinearLayout>
     
     <EditText
         android:id="@+id/Senha"

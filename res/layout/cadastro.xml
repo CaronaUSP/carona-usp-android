@@ -11,34 +11,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cadastro"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="48sp" />
 
-    <EditText
-        android:id="@+id/editText1"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/login_field"
-        android:inputType="textEmailAddress" />
+        android:layout_height="wrap_content" >
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="310dp"
-        android:layout_height="wrap_content"
-        android:text="@string/cadastro_info"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        <EditText
+            android:id="@+id/login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10.54"
+            android:ems="10"
+            android:hint="@string/login_field"
+            android:inputType="textEmailAddress" />
 
-    <EditText
-        android:id="@+id/numeroUSP"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/numero_usp"
-        android:inputType="number" >
-
-        <requestFocus />
-    </EditText>
+        <TextView
+            android:id="@+id/usp_br"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/usp_br"
+            android:textSize="19sp" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/Senha"
