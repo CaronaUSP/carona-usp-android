@@ -34,7 +34,7 @@ public class Cadastro extends Activity {
 			break;
 		case R.id.cadastrar:
 
-			String usuario = ((EditText) findViewById(R.id.numeroUSP))
+			String usuario = ((EditText) findViewById(R.id.login))
 					.getText().toString();
 			String senha = ((EditText) findViewById(R.id.Senha)).getText()
 					.toString();
@@ -77,7 +77,7 @@ public class Cadastro extends Activity {
 				tcpListener = new TCPListener(tcpClient);
 
 			} catch (Exception e) {
-				Log.e("ERRO DE CONEX√O", "Verifique sua conex„o com a Internet");
+				Log.e("ERRO DE CONEX√ÉO", "Verifique sua conex√£o com a Internet");
 				return null;
 			}
 
