@@ -25,12 +25,14 @@
     <string name="pedestre_encontrado">Pedestre encontrado(a)!</string>
     <string name="ponto_partida">Vocês se encontrarão em:</string>
     <string name="ponto_chegada">Destino:</string>
-    <string name="insira_caracteristicas">Insira características do seu carro (ex.: placa, modelo, cor, etc.) para que seja facilmente identificado:</string>
-    <string name="caracteristicas_identificadoras">O carro do(a) carona possui essas características identificadoras:</string>
+    <string name="insira_caracteristicas">Insira características do seu carro (ex.: placa, modelo, cor, etc.) para que ele seja facilmente identificado pelo(s) pedestre(s):</string>
+    <string name="caracteristicas_identificadoras">O carro da carona possui essas características identificadoras:</string>
     <string name="dados_enviados">Dados enviados.</string>
     <string name="boa_carona">Boa carona!</string>
-    <string name="dados_invalidos">Dado(s) inválido(s). Tente novamente.</string>
+    <string name="dados_invalidos">Houve um erro. Tente novamente.</string>
     <string name="nova_senha">Nova senha</string>
+    <string name="lembrar">Lembrar desses dados</string>
+    <string name="dados">Dados</string>
     
 
 </resources>
