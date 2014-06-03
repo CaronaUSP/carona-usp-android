@@ -4,69 +4,169 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
+import android.text.Html;
 import android.view.View;
 import android.widget.EditText;
 import app.caronacomunitaria.br.R;
-import app.caronacomunitaria.br.crypto.Hash;
-import app.caronacomunitaria.br.net.Consts;
-import app.caronacomunitaria.br.net.OnMessageReceivedListener;
-import app.caronacomunitaria.br.net.TCPClient;
-import app.caronacomunitaria.br.net.TCPListener;
+import app.caronacomunitaria.br.net.SocketService;
+
 
 public class Main extends Activity {
+
+	boolean mIsBound;
+	final Messenger mMessenger = new Messenger(new IncomingHandler());
+	Messenger mService = null;
+
+
+	class IncomingHandler extends Handler {
+		@Override
+		public void handleMessage(Message msg) {
+			AlertDialog.Builder builder;
+			AlertDialog dialogSucesso;
+			
+			switch (msg.what) {
+
+			case SocketService.ERRO:
+
+				builder = new AlertDialog.Builder(Main.this);
+				builder.setTitle("ERRO")
+				.setMessage(
+						Html.fromHtml("<p>Verifique sua conexão com a Internet.</p>"));	
+				dialogSucesso = builder.create();
+				dialogSucesso.show();				
+				break;
+
+			case SocketService.OK:
+				Intent it = new Intent(Main.this, Mapa.class);
+				startActivity(it);
+				break;			
+
+			case SocketService.ERRO_AUTENTICACAO:
+				builder = new AlertDialog.Builder(Main.this);
+				builder.setTitle("ERRO")
+				.setMessage(
+						Html.fromHtml("<p>Verifique sua conexão com a Internet.</p>"));	
+				dialogSucesso = builder.create();
+				dialogSucesso.show();				
+				break;
+			default:
+				super.handleMessage(msg);
+			}
+
+		}
+	}
+
+
+	private ServiceConnection mConnection = new ServiceConnection() {
+
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			mService = new Messenger(service);
+			try {
+				Message msg = Message.obtain(null, SocketService.REGISTRAR_CLIENTE);
+				msg.replyTo = mMessenger;
+				mService.send(msg);
+
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			mService = null;
+		}
+	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		startService(new Intent(this, SocketService.class));
+		doBindService();
+
 	}
+
+
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		// TODO
-		// fechar conexão caso ela esteja aberta
 
+		try {
+			doUnbindService();
+		} catch (Exception e) {
+		}
 	}
+
+	private void doBindService() {
+		bindService(new Intent(this, SocketService.class), mConnection, Context.BIND_AUTO_CREATE);
+		mIsBound = true; 		
+	}
+
+	private void doUnbindService() {
+		if (mIsBound) {            
+			unbindService(mConnection);
+			stopService(new Intent(this, SocketService.class));
+			mIsBound = false;
+		}
+	}
+
+	private void sendMessageToService(int arg, Bundle b) {
+		if (mIsBound) {
+			if (mService != null) {
+				try {
+					Message msg = Message.obtain(null, arg, 0, 0);
+					msg.setData(b);
+					msg.replyTo = mMessenger;
+					mService.send(msg);				
+
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
 
 	public void onClick(View v) {
 
-		Intent it;
-		EditText edSenha = (EditText) findViewById(R.id.password);
-		EditText edLogin = (EditText) findViewById(R.id.login);
-
+		Intent it = null;
 		JSONObject json_mensagem = new JSONObject();
+
+		String senha = ((EditText) findViewById(R.id.senha)).getText().toString();
+		String login = ((EditText) findViewById(R.id.login)).getText().toString();
+
 		try {
-			json_mensagem.put("usuario", edLogin.getText().toString());
-			json_mensagem.put("senha", edSenha.getText().toString());
+			json_mensagem.put("usuario", login);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		switch (v.getId()) {
 
 		case R.id.dar_carona:
-
-			new Autenticar().execute(json_mensagem);
-
-			// TODO Validar os os EditText login e senha
-
-			it = new Intent(this, Mapa.class);
+			if(validar())
+				it = new Intent(this, Mapa.class);
 			startActivity(it);
-
 			break;
+			// @TODO Validar os os EditText login e senha
 
 		case R.id.receber_carona:
-
-			new Autenticar().execute(json_mensagem);
-			it = new Intent(this, Mapa.class);
-			startActivity(it);
-
+			Bundle b = new Bundle();
+			b.putString("usuario", login);
+			b.putString("senha", senha);
+			sendMessageToService(SocketService.AUTENTICAR, b);
 			break;
 
 		case R.id.cadastro:
@@ -83,73 +183,13 @@ public class Main extends Activity {
 
 	}
 
-	public class Autenticar extends AsyncTask<JSONObject, String, String> {
+	private boolean validar() {
 
-		private JSONObject jsonMensagem;
-		private TCPClient tcpClient;
-		private TCPListener tcpListener;
-
-		@Override
-		protected String doInBackground(JSONObject... mensagem) {
-			this.jsonMensagem = mensagem[0];
-
-			tcpClient = new TCPClient(Consts.PORTA, Consts.HOST);
-			try {
-				tcpClient.conectar();
-				tcpListener = new TCPListener(tcpClient);
-
-			} catch (Exception e) {
-				Log.e("ERRO DE CONEXÃO", "Verifique sua conexão com a Internet");
-				return null;
-			}
-
-			tcpListener
-					.setOnMessageReceivedListener(new OnMessageReceivedListener() {
-						@Override
-						public void messageReceived(String s) {
-							publishProgress(s);
-
-						}
-					});
-
-			tcpListener.run();
-
-			return null;
-		}
-
-		@Override
-		protected void onProgressUpdate(String... mensagem) {
-			
-			super.onProgressUpdate(mensagem);
-			Log.e("Mensagem recebida", mensagem[0]);
-
-			try {
-				JSONObject jsonRecebido = new JSONObject(mensagem[0]);
-
-				if (jsonRecebido.has("login")) {
-					String senha = jsonMensagem.getString("senha");
-					String mensagemRecebida = jsonRecebido.getString("login");
-
-					jsonMensagem.put("hash", Hash.gerarHash(mensagemRecebida
-							+ Consts.MENSAGEM_HASH + senha, Consts.ALGORITMO));
-					jsonMensagem.remove("senha");
-
-					tcpClient.enviarMensagem(jsonMensagem.toString());
-
-				} else {
-					if (jsonRecebido.has("fim")) {
-						tcpListener.stop();
-					}
-				}
-
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				Log.e("Mensagem recebida", mensagem[0]);
-
-				tcpListener.stop();
-			}
-
-		}
+		// TODO validar formulário
+		return true;
 	}
 
 }
+
+
+

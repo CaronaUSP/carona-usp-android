@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fundo"
+    android:gravity="right"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/insira_caracteristicas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/insira_caracteristicas"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/dados"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/dados"
+        android:inputType="text" />
+    
+    <Button
+        android:id="@+id/enviar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/botao"
+        android:onClick="onClick"
+        android:text="@string/enviar" />
+
+</LinearLayout>

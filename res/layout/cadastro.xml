@@ -36,7 +36,7 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/Senha"
+        android:id="@+id/senha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -44,7 +44,7 @@
         android:inputType="textPassword" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/repetir_senha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
