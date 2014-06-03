@@ -8,6 +8,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import android.util.Log;
+
 /**
  * <p>
  * Carona Comunitária USP está licenciado com uma Licença Creative Commons
@@ -25,8 +27,12 @@ import java.net.UnknownHostException;
 
 public class TCPClient {
 	/**
+	 * 
+	 */
+	/**
 	 * Porta do servidor que será usada para a conexão
 	 * */
+
 	private int porta;
 	/**
 	 * Endereço ip do servidor
@@ -36,6 +42,12 @@ public class TCPClient {
 	 * Socket usado para a transmissão de dados
 	 * */
 	private Socket socket;
+
+	private OnMessageReceivedListener mMessageListener;
+
+	private boolean run = false;
+
+	private InputStream is;
 
 	private PrintWriter out;
 
@@ -65,6 +77,7 @@ public class TCPClient {
 		InetAddress serverAddr = InetAddress.getByName(this.host);
 		socket = new Socket(serverAddr, porta);
 		out = new PrintWriter(socket.getOutputStream(), true);
+		this.is = socket.getInputStream();
 	}
 
 	/**
@@ -82,14 +95,42 @@ public class TCPClient {
 		}
 	}
 
+	public void run() {
+		StringBuilder mensagem_servidor = new StringBuilder();
+		run = true;
+		int m;		
+		while (run) {
+
+			m = 0;
+			try {
+				while ((m = is.read()) != 0) {
+					mensagem_servidor.append((char) m);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			mMessageListener.messageReceived(mensagem_servidor.toString());
+			mensagem_servidor = new StringBuilder();
+		}			
+	}
+
 	/**
 	 * Fecha o socket.
 	 * 
 	 * @throws IOException
 	 */
 
-	public void desconectar() throws IOException {
-		socket.close();
+	public void desconectar() {
+		run = false;
+		Log.i("Desconectado", String.valueOf(run));
+		try {
+			if (socket != null)
+				socket.close();
+		} catch (IOException e) {
+
+		}
+
 	}
 
 	/**
@@ -100,5 +141,14 @@ public class TCPClient {
 
 	public InputStream getInputStream() throws IOException {
 		return socket.getInputStream();
+	}
+
+	public void stop() {
+		run = false;
+	}
+
+	public void setOnMessageReceivedListener(
+			OnMessageReceivedListener onMessageReceivedListener) {
+		this.mMessageListener = onMessageReceivedListener;
 	}
 }
