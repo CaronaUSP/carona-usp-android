@@ -38,8 +38,8 @@ Exemplo: {"codigo" : 12345}
 
 Se o usuário dará carona:
 Cliente -> Servidor:
-pontos, placa: array de pontos de ônibus pelos quais o carro passará, enviada após login, e placa do carro.
-Exemplo: {"pontos" : [1, 5, 9, 2], "placa" : "ABC-0123"}
+pontos, placa, lugares: array de pontos de ônibus pelos quais o carro passará, enviada após login, e placa do carro, e número de lugares livres.
+Exemplo: {"pontos" : [1, 5, 9, 2], "placa" : "ABC-0123", "lugares" : 3}
 
 proximo: indica que o carro está próximo de um ponto (envia índice da array "pontos", definida acima). Devemos definir uma distância razoável.
 Exemplo: {"proximo" : 2}
