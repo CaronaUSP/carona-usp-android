@@ -12,50 +12,63 @@ Exemplo: {"login" : "mensagem para hash"}
 msg: envia uma mensagem para ser mostrada ao usuário.
 Exemplo: {"msg" : "Ocorreu um erro!"}
 
+ok: booleano indicando status da última operação requisitada pelo cliente. true indica sucesso, false falha. Algumas falhas
+fecham a conexão com mensagem de erro ao invés de retornar status de falha, por enquanto, apenas a checagem do código no cadastro
+retorna status inválido (se o código estiver errado, significando que o cliente deve pedir para o usuário redigitar e enviar novamente
+o código). Outras partes devem suportar status de falha, vou mudar aqui quando o servidor for modificado.
+
+fim: indica que a conexão será fechada. Não possui valor definido.
+Exemplo: {"fim" : null}
+
 
 
 Cliente -> Servidor:
 usuario/hash: envia para o servidor o usuário e hash.
 Exemplo: {"usuario" : "exemplo", "hash" : "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"}
 
-cadastro: valor nulo, indica que deseja-se fazer cadastro e não login
+cadastro: valor nulo, indica que deseja-se fazer cadastro e não login.
 Exemplo: {"cadastro" : null, "usuario" : "exemplo", "hash" : "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"}
-Um email será enviado para "exemplo@usp.br" com um número de confirmação para ser digitado no aplicativo.
+Um email será enviado para "exemplo@usp.br" com um código de confirmação para ser digitado no aplicativo.
 
-ok: booleano indicando status da última operação requisitada pelo cliente. true indica sucesso, false falha. Algumas falhas
-fecham a conexão com mensagem de erro ao invés de retornar status de falha, por enquanto, apenas a checagem do código no cadastro
-retorna status inválido (se o código estiver errado, significando que o cliente deve pedir para o usuário redigitar e enviar novamente
-o código). Outras partes devem suportar status de falha, vou mudar aqui quando o servidor for modificado.
-
-
-Ambos:
-fim: indica que a conexão será fechada. Não possui valor definido.
-Ainda precisa ser implementado no servidor (na verdade, irá fechar a conexão, mas com erro por não receber a duplaque ele esperaria)
-Exemplo: {"fim" : null}
+codigo: código enviado por e-mail para o usuário, deve ser mandado ao servidor após pedir novo cadastro.
+Recebe como resposta "ok" : true se o código estiver correto, senão "ok" : false.
+Exemplo: {"codigo" : 12345}
 
 
 
 Se o usuário dará carona:
 Cliente -> Servidor:
-pontos: array de pontos de ônibus pelos quais o carro passará, enviada após login.
-Exemplo: {"pontos" : [1, 5, 9, 2]}
-Ainda temos que decidir a numeração dos pontos (tem que ser igual no servidor e cliente), acho que o mais intuitivo seria seguir o trajeto de um dos circulares.
+pontos, placa, lugares: array de pontos de ônibus pelos quais o carro passará, enviada após login, e placa do carro, e número de lugares livres.
+Exemplo: {"pontos" : [1, 5, 9, 2], "placa" : "ABC-0123", "lugares" : 3}
 
-cheguei: indica que o carro chegou em um ponto (envia índice da array "pontos", definida acima).
-Exemplo: {"cheguei" : 2}
-Usando a array "pontos" como exemplo, {"cheguei" : 2} indica que chegamos no ponto 9 (índice dois de [1, 5, 9, 2]).
+proximo: indica que o carro está próximo de um ponto (envia índice da array "pontos", definida acima). Devemos definir uma distância razoável.
+Exemplo: {"proximo" : 2}
+Usando a array "pontos" como exemplo, {"proximo" : 2} indica que chegamos no ponto 9 (índice dois de [1, 5, 9, 2]).
 Será usado para atualizar a posição de quem dá carona no servidor. Ainda será implementado em ambos
+
+Servidor -> Cliente:
+parar: envia um ponto onde haverá alguém esperando carona.
+Exemplo: {"parar" : 3}
 
 
 
 Se o usuário receberá carona:
+Cliente -> Servidor:
 inicio, fim: ponto de início e fim do trajeto, enviados após login.
 Exemplo: {inicio : 1, fim : 0}
 
+Servidor -> Cliente:
+placa: placa de quem dará carona (para identificar o carro).
+Exemplo: {placa : "ABC-0123"}
 
-A lista ainda será expandida. Cada objeto pode conter mais que uma mensagem, como:
+chegando: valor nulo, indica que o motorista está chegando.
+Exemplo: {"chegando" : null}
+
+
+Cada objeto pode conter mais que uma mensagem, como:
 {"msg" : "Erro de comunicação", "fim" : null}
 
 Ideias futuras (serão implementadas se sobrar tempo):
--Incluir campo para identificação do carro (placa, modelo e/ou cor) para quem dará carona e enviar para quem receberá para facilitar a identificação.
 -Usar GPS para localizar posição de quem dá carona e cancelar a carona caso quem deseja receber deixe o ponto de ônibus.
+
+Chaves "chegando" e "proximo" são baixa prioridade para terminar o projeto.
