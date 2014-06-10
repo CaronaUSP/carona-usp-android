@@ -18,6 +18,7 @@ import android.os.RemoteException;
 import android.text.Html;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 import app.caronacomunitaria.br.R;
 import app.caronacomunitaria.br.net.SocketService;
 
@@ -78,6 +79,10 @@ public class Main extends Activity {
 				sendMessageToService(SocketService.REINICIAR_CONEXAO, null);
 
 				break;
+			case SocketService.MSG:
+				Bundle b = msg.getData();
+				String mensagem = b.getString("msg");
+				Toast.makeText(Main.this, mensagem, Toast.LENGTH_LONG).show();
 			default:
 				super.handleMessage(msg);
 			}

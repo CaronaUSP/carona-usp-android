@@ -263,7 +263,10 @@ public class ReceberCarona extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();		
+		inicio = -1;
+		fim = -1;
 		doUnbindService();
+		
 		removeNotification();
 	}
 

@@ -43,6 +43,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class DarCarona extends Activity {
 
@@ -87,6 +88,11 @@ public class DarCarona extends Activity {
 				String mensagem = String.format(DarCarona.this.getResources()
 						.getString(R.string.parar_info), pontoParar);
 				showAlertDialog(titulo, mensagem);
+				break;
+			case SocketService.MSG:
+				b = msg.getData();
+				String m = b.getString("msg");
+				Toast.makeText(DarCarona.this, m, Toast.LENGTH_LONG).show();
 
 			default:
 				super.handleMessage(msg);

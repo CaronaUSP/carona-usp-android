@@ -30,6 +30,7 @@ public class SocketService extends Service {
 	public static final int FIM = 6;
 	public static final int CONECTAR = 7;
 	public static final int RECEBER_CARONA = 8;
+	public static final int MSG = 11;
 
 	public static final int ERRO_AUTENTICACAO = -2;
 	public static final int ERRO = -1;
@@ -279,7 +280,6 @@ public class SocketService extends Service {
 							tcpClient.enviarMensagem(jsonMensagem
 									.toString());
 						} else if (jsonRecebido.has("ok")) {
-							tcpClient.stop();
 							if ((Boolean) jsonRecebido.get("ok")) {
 								sendMessageToUI(OK, null);
 							} else {
@@ -289,6 +289,11 @@ public class SocketService extends Service {
 						} else if (jsonRecebido.has("fim")) {
 							tcpClient.stop();
 							sendMessageToUI(ERRO_AUTENTICACAO, null);
+						}
+						else if(jsonRecebido.has("msg")){
+							Bundle b = new Bundle();
+							b.putString("msg", jsonRecebido.getString("msg"));
+							sendMessageToUI(MSG, b);							
 						}
 					} catch (Exception e) {
 						tcpClient.desconectar();
@@ -341,6 +346,11 @@ public class SocketService extends Service {
 									.get("parar"));
 							sendMessageToUI(DarCarona.PARAR, b);
 						}
+						else if(jsonMensagemRecebida.has("msg")){
+							Bundle b = new Bundle();
+							b.putString("msg", jsonMensagemRecebida.getString("msg"));
+							sendMessageToUI(MSG, b);
+						}
 					} catch (JSONException e) {
 						//
 						e.printStackTrace();
@@ -377,6 +387,11 @@ public class SocketService extends Service {
 						} else if (jsonMensagemRecebida.has("chegando")) {
 							sendMessageToUI(ReceberCarona.CHEGANDO,
 									null);
+						}
+						else if(jsonMensagemRecebida.has("msg")){
+							Bundle b = new Bundle();
+							b.putString("msg", jsonMensagemRecebida.getString("msg"));
+							sendMessageToUI(MSG, b);						
 						}
 					} catch (JSONException e) {
 						//
