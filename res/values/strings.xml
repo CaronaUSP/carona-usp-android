@@ -16,8 +16,9 @@
     <string name="esqueci_info">Após inserir o seu e-mail USP e clicar em "Enviar", você receberá um e-mail para alterar a sua senha.</string>
     <string name="copyright">© 2014 Carona Comunitária. O logotipo da USP é propriedade de USP Imagens. Os demais direitos estão atribuídos à licença CC BY-NC-SA 4.0.</string>
     <string name="selecionar_rota">Selecione o seu trajeto, ponto por ponto.</string>
+    <string name="selecionar_inicio_fim">Selecione o ponto onde você está e o ponto a que deseja ir</string>
     <string name="confirmar">Confirmar</string>
-	<string name="pedido_falha">Falha ao realizar pedido. Verifique a sua conexão com a internet e tente novamente depois.</string>
+<string name="pedido_falha">Falha ao realizar pedido. Verifique a sua conexão com a internet e tente novamente depois.</string>
     <string name="pedido_sucesso">Pedido realizado com sucesso.</string>
     <string name="pedido_sucesso_email">Pedido realizado com sucesso. Verifique o seu e-mail em instantes para confirmar a alteração.</string>
     <string name="aguarde">Por favor, aguarde.</string>
@@ -25,14 +26,35 @@
     <string name="pedestre_encontrado">Pedestre encontrado(a)!</string>
     <string name="ponto_partida">Vocês se encontrarão em:</string>
     <string name="ponto_chegada">Destino:</string>
-    <string name="insira_caracteristicas">Insira características do seu carro (ex.: placa, modelo, cor, etc.) para que ele seja facilmente identificado pelo(s) pedestre(s):</string>
+    <string name="insira_caracteristicas">Insira o número da placa do seu carro para que você seja facilmente identificado pelo(a) pedestre:</string>
     <string name="caracteristicas_identificadoras">O carro da carona possui essas características identificadoras:</string>
     <string name="dados_enviados">Dados enviados.</string>
     <string name="boa_carona">Boa carona!</string>
     <string name="dados_invalidos">Houve um erro. Tente novamente.</string>
     <string name="nova_senha">Nova senha</string>
-    <string name="lembrar">Lembrar desses dados</string>
-    <string name="dados">Dados</string>
+    <string name="dados">Nº da placa</string>
+    
+    <string name="codigo_confirmacao_titulo">Código de confirmação</string>
+    <string name="codigo_confirmacao_info">Digite o código recebido pelo seu e-mail @usp</string>
+    <string name="erro_enviar_codigo">Código digitado não corresponde ao enviado por e-mail. \nRefaça seu cadastro.</string>
+    
+    <string name="parar_titulo">Pedestre localizado</string> <!-- arrumar mensagens -->
+    <string name="parar_info">Para no ponto %s</string>
+    
+    <string name="placa_titulo">Informações do carro</string>
+    <string name="placa_info">O carro de placa %s te dará carona</string>
+    
+    <string name="chegando_titulo">Chegando</string>
+    <string name="chegando_info">O carro de placa %s está a menos de daqui. Aguarde!</string>
+    
+    <string name="hint_lugares">Nº de lugares</string>
+    
+    <string name="erro">ERRO</string>
+    <string name="erro_inicio_fim_info">Selecione o dois pontos</string>
+    
+    <string name="notificacao_titulo">A carona está chegando!</string>
+    <string name="notificacao_info" formatted="false">O carro de placa %s está a menos de %s daqui.</string>
+    
     
 
 </resources>

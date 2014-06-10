@@ -7,8 +7,8 @@ public class PontoMapa {
 	private String titulo;
 	private String descricao;
 	private float cor;
-	
-	
+
+
 	public PontoMapa(LatLng coordenada, String titulo, String descricao, float cor)
 	{
 		this.coordenada = coordenada;
@@ -65,6 +65,6 @@ public class PontoMapa {
 		this.cor = cor;
 	}
 
-	
-	
+
+
 }

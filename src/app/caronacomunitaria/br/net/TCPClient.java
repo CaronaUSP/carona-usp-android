@@ -1,7 +1,7 @@
 package app.caronacomunitaria.br.net;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -47,7 +47,7 @@ public class TCPClient {
 
 	private boolean run = false;
 
-	private InputStream is;
+	private InputStreamReader in;
 
 	private PrintWriter out;
 
@@ -77,7 +77,7 @@ public class TCPClient {
 		InetAddress serverAddr = InetAddress.getByName(this.host);
 		socket = new Socket(serverAddr, porta);
 		out = new PrintWriter(socket.getOutputStream(), true);
-		this.is = socket.getInputStream();
+		this.in = new InputStreamReader(socket.getInputStream(), "UTF-8");
 	}
 
 	/**
@@ -95,25 +95,29 @@ public class TCPClient {
 		}
 	}
 
+	public boolean isConnected(){		
+		return socket==null ? false : socket.isConnected();
+	}
+
 	public void run() {
 		StringBuilder mensagem_servidor = new StringBuilder();
 		run = true;
-		int m;		
-		while (run) {
-
-			m = 0;
-			try {
-				while ((m = is.read()) != 0) {
+		int m;
+		try {
+			while (run) {
+				m = 0;
+				while ((m = in.read()) != 0) {
 					mensagem_servidor.append((char) m);
 				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				mMessageListener.messageReceived(mensagem_servidor.toString());
+				mensagem_servidor = new StringBuilder();
 			}
-			mMessageListener.messageReceived(mensagem_servidor.toString());
-			mensagem_servidor = new StringBuilder();
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}			
-	}
+	}			
+
 
 	/**
 	 * Fecha o socket.
@@ -133,15 +137,9 @@ public class TCPClient {
 
 	}
 
-	/**
-	 * Retorna um input stream para ler dados do socket.
-	 * 
-	 * @throws IOException
-	 */
+	
 
-	public InputStream getInputStream() throws IOException {
-		return socket.getInputStream();
-	}
+
 
 	public void stop() {
 		run = false;

@@ -1,11 +1,14 @@
 package app.caronacomunitaria.br.ui;
 
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -14,7 +17,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.util.Log;
+import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 
@@ -23,61 +26,50 @@ import app.caronacomunitaria.br.net.SocketService;
 
 public class Cadastro extends Activity {
 
-	boolean mIsBound;
-	Messenger mService = null;
+	private boolean mIsBound;
+	private Messenger mService = null;
+	private String usuario= null;
+	private String senha = null;
+
 
 	final Messenger mMessenger = new Messenger(new IncomingHandler());
 
 	class IncomingHandler extends Handler {
 		@Override
 		public void handleMessage(Message msg) {
-            switch (msg.what) {
-            
-            case SocketService.ERRO:
-            	
-            	Log.e("erro", "erro");
-                break;
-                
-            case SocketService.OK:
-            	Cadastro.this.finish();
-            	
-            	// TODO exibir um alertDialog
-            	// o código abaixo está dando erro
-            	/*AlertDialog.Builder builder = new AlertDialog.Builder(
-						Cadastro.this);
-				
+			switch (msg.what) {
 
-				builder.setTitle("Mensagem")
-				.setMessage(
-						Html.fromHtml("<p>Cadastro efetuado com sucesso!</p><p>Verifique seu e-mail</p>"))
-						.setPositiveButton("Ok",
-								new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,	int which) {
-								
-								Cadastro.this.finish();
-							}
-						});
-				AlertDialog dialogSucesso = builder.create();
-				dialogSucesso.show();
-            	*/
-            	
-                break;
-                
-            default:
-                super.handleMessage(msg);
-            }
-        
-    }
+			case SocketService.CADASTRAR:
+				mostrarAlertCodigo();
+				break;
+
+			case SocketService.ERRO:
+				mostrarAlertErro();
+				break;
+
+			case SocketService.OK:
+				Intent i = new Intent();
+				i.putExtra("usuario", usuario);
+				i.putExtra("senha", senha);
+				
+				Cadastro.this.setResult(SocketService.CADASTRAR, i);
+				Cadastro.this.finish();
+				break;
+
+			default:
+				super.handleMessage(msg);
+			}
+
+		}
 	}
 
 	private ServiceConnection mConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			mService = new Messenger(service);
 			try {
-				 Message msg = Message.obtain(null, SocketService.REGISTRAR_CLIENTE);
-	                msg.replyTo = mMessenger;
-	                mService.send(msg);
+				Message msg = Message.obtain(null, SocketService.REGISTRAR_CLIENTE);
+				msg.replyTo = mMessenger;
+				mService.send(msg);
 
 			} catch (RemoteException e) {
 				e.printStackTrace();
@@ -89,6 +81,61 @@ public class Cadastro extends Activity {
 		}
 	};
 
+	public void mostrarAlertCodigo()
+	{
+
+		AlertDialog.Builder alert = new AlertDialog.Builder(Cadastro.this);
+
+		alert.setTitle(R.string.codigo_confirmacao_titulo);
+		alert.setMessage(R.string.codigo_confirmacao_info);
+
+		final EditText input = new EditText(Cadastro.this);
+		input.setInputType(InputType.TYPE_CLASS_NUMBER);
+		alert.setView(input);
+
+		alert.setNeutralButton("Enviar", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				if(input.getText().toString().length()>0){
+					dialog.dismiss();
+					Bundle b = new Bundle();
+					b.putInt("codigo", Integer.valueOf(input.getText().toString()));
+					sendMessageToService(SocketService.CONFIRMAR_CADASTRO, b);
+				}
+				else
+				{
+					mostrarAlertErro();
+				}
+			}
+		});
+
+
+
+		alert.create()
+		.show();
+
+
+	}
+
+	public void mostrarAlertErro()
+	{
+		AlertDialog.Builder alert = new AlertDialog.Builder(Cadastro.this);
+
+		alert.setTitle("Erro");
+		alert.setMessage(R.string.erro_enviar_codigo);
+
+
+		alert.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				dialog.dismiss();
+				Cadastro.this.finish();
+			}
+		});
+
+
+		alert.create()
+		.show();
+	}
+
 
 
 	@Override
@@ -96,6 +143,7 @@ public class Cadastro extends Activity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cadastro);
+
 		doBindService();
 	}
 
@@ -130,9 +178,9 @@ public class Cadastro extends Activity {
 
 		case R.id.cadastrar:
 
-			String usuario = ((EditText) findViewById(R.id.login)).getText()
+			usuario = ((EditText) findViewById(R.id.login)).getText()
 			.toString();
-			String senha = ((EditText) findViewById(R.id.senha)).getText()
+			senha = ((EditText) findViewById(R.id.senha)).getText()
 					.toString();
 
 			JSONObject jsonMensagem = new JSONObject();
@@ -147,11 +195,10 @@ public class Cadastro extends Activity {
 
 			if(validar())
 			{
-
 				Bundle b = new Bundle();
 				b.putString("usuario", usuario);
 				b.putString("senha", senha);
-				sendMessageToService(SocketService.CADASTRAR, b);
+				sendMessageToService(SocketService.CADASTRAR, b);	
 			}
 			break;
 		}
@@ -189,12 +236,12 @@ public class Cadastro extends Activity {
 			mIsBound = false;
 		}
 	}
-
-	protected void onDestroy() {
+	@Override
+	protected void onDestroy()
+	{
 		super.onDestroy();
-		try {
-			doUnbindService();
-		} catch (Exception e) {
-		}
+		doUnbindService();
 	}
+
+
 }

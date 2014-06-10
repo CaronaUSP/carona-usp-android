@@ -24,17 +24,24 @@ import app.caronacomunitaria.br.net.SocketService;
 
 public class Main extends Activity {
 
-	boolean mIsBound;
-	final Messenger mMessenger = new Messenger(new IncomingHandler());
-	Messenger mService = null;
+	private boolean mIsBound;
+	private Messenger mService = null;
+
+	private static int nextActivity;
+	private EditText editTextLogin, editTextSenha;
 
 
-	class IncomingHandler extends Handler {
+
+
+
+
+	private Handler IncomingHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			AlertDialog.Builder builder;
 			AlertDialog dialogSucesso;
-			
+			Intent it = null;
+
 			switch (msg.what) {
 
 			case SocketService.ERRO:
@@ -42,29 +49,61 @@ public class Main extends Activity {
 				builder = new AlertDialog.Builder(Main.this);
 				builder.setTitle("ERRO")
 				.setMessage(
-						Html.fromHtml("<p>Verifique sua conexão com a Internet.</p>"));	
+						Html.fromHtml("<p>Verifique sua conexão com a Internet.</p>"))
+						.setNeutralButton("Ok", null);
 				dialogSucesso = builder.create();
-				dialogSucesso.show();				
+				dialogSucesso.show();
+				Main.this.sendMessageToService(SocketService.CONECTAR, null);
 				break;
 
 			case SocketService.OK:
-				Intent it = new Intent(Main.this, Mapa.class);
-				startActivity(it);
-				break;			
+
+				if(nextActivity == SocketService.RECEBER_CARONA)
+					it = new Intent(Main.this, ReceberCarona.class);
+				else if(nextActivity == SocketService.DAR_CARONA)
+					it = new Intent(Main.this, DarCarona.class);
+				else if(nextActivity == SocketService.CADASTRAR)
+					it = new Intent(Main.this, Cadastro.class);
+				startActivityForResult(it,0); 
+				break;
 
 			case SocketService.ERRO_AUTENTICACAO:
 				builder = new AlertDialog.Builder(Main.this);
 				builder.setTitle("ERRO")
 				.setMessage(
-						Html.fromHtml("<p>Verifique sua conexão com a Internet.</p>"));	
+						Html.fromHtml("<p>Usuário ou senha errados.</p>"))
+						.setNeutralButton("Ok", null);
 				dialogSucesso = builder.create();
-				dialogSucesso.show();				
+				dialogSucesso.show();
+				sendMessageToService(SocketService.REINICIAR_CONEXAO, null);
+
 				break;
 			default:
 				super.handleMessage(msg);
 			}
-
 		}
+	};
+
+	private final Messenger mMessenger = new Messenger(IncomingHandler);
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		doUnbindService();
+		startService(new Intent(this, SocketService.class));
+		doBindService();
+		sendMessageToService(SocketService.CONECTAR, null);
+
+		if(resultCode == SocketService.CADASTRAR)
+		{
+			String login = data.getStringExtra("usuario");
+			String  senha = data.getStringExtra("senha");
+
+			editTextLogin.setText(login);
+			editTextSenha.setText(senha);
+		}
+
 	}
 
 
@@ -88,12 +127,15 @@ public class Main extends Activity {
 		}
 	};
 
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		startService(new Intent(this, SocketService.class));
 		doBindService();
+		editTextLogin = (EditText) findViewById(R.id.login);
+		editTextSenha = (EditText) findViewById(R.id.senha);
 
 	}
 
@@ -102,6 +144,8 @@ public class Main extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+
+		sendMessageToService(SocketService.FIM, null);
 
 		try {
 			doUnbindService();
@@ -144,49 +188,54 @@ public class Main extends Activity {
 		Intent it = null;
 		JSONObject json_mensagem = new JSONObject();
 
-		String senha = ((EditText) findViewById(R.id.senha)).getText().toString();
-		String login = ((EditText) findViewById(R.id.login)).getText().toString();
+		String senha = editTextSenha.getText().toString();
+		String login = editTextLogin.getText().toString();
 
 		try {
 			json_mensagem.put("usuario", login);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		Bundle b;
 
 		switch (v.getId()) {
 
 		case R.id.dar_carona:
-			if(validar())
-				it = new Intent(this, Mapa.class);
-			startActivity(it);
+			if(validar(login,senha)){
+				nextActivity = SocketService.DAR_CARONA;
+				b = new Bundle();
+				b.putString("usuario", login);
+				b.putString("senha", senha);
+				sendMessageToService(SocketService.AUTENTICAR, b);
+			}
+
 			break;
-			// @TODO Validar os os EditText login e senha
+
 
 		case R.id.receber_carona:
-			Bundle b = new Bundle();
-			b.putString("usuario", login);
-			b.putString("senha", senha);
-			sendMessageToService(SocketService.AUTENTICAR, b);
+			if(validar(login,senha)){
+				nextActivity = SocketService.RECEBER_CARONA;
+				b = new Bundle();
+				b.putString("usuario", login);
+				b.putString("senha", senha);
+				sendMessageToService(SocketService.AUTENTICAR, b);
+			}
+
 			break;
 
 		case R.id.cadastro:
-			it = new Intent(this, Cadastro.class);
-			startActivity(it);
+			nextActivity = SocketService.CADASTRAR;
+			sendMessageToService(SocketService.ESTA_CONECTADO,null);
 			break;
 
-		case R.id.esqueci:
-			it = new Intent(this, Esqueci.class);
-			startActivity(it);
-			break;
+
 
 		}
 
 	}
 
-	private boolean validar() {
-
-		// TODO validar formulário
-		return true;
+	private boolean validar(String login, String senha) {
+		return login.trim().length()>0 && senha.trim().length()>0;
 	}
 
 }
